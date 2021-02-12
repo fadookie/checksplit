@@ -1,59 +1,9 @@
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useInput } from "./useInput";
-// import "./index.css";
-import _ from "lodash";
-
-/*
-const esDinner = (14.95+12.99) / 2
-
-const prices = [esDinner, esDinner, 14.99]
-
-const subtotal = prices.reduce((acc, cur) => acc + cur, 0)
-
-const total = 55.28
-
-const taxAndTip = total - subtotal
-
-const portionWeights = prices.map(x => x / subtotal)
-
-const portionTotalSplits = portionWeights.map(x => x * total)
-
-console.log({ subtotal, taxAndTip });
-
-console.log('portionWeights', portionWeights, portionWeights.reduce((acc, cur) => acc + cur, 0))
-
-console.log('portionTotalSplits', portionTotalSplits.map(x => x.toFixed(2)), portionTotalSplits.reduce((acc, cur) => acc + cur, 0))
-*/
-
-function LineItem(props) {
-  const { item, onDelete, onUpdate, totalSplit } = props;
-  const { value: cost, bind: bindCost, reset: resetCost } = useInput(item.cost);
-  const { value: owners, bind: bindOwners, reset: resetOwners } = useInput(
-    item.owners
-  );
-  useEffect(() => {
-    const newItem = Object.freeze({
-      ...item,
-      cost: parseInt(cost, 10),
-      owners
-    });
-    onUpdate(newItem);
-  }, [cost, owners]);
-  return (
-    <>
-      <label>
-        Item Cost:
-        <input type="number" {...bindCost} />
-        Owners:
-        <input type="text" {...bindOwners} />
-        Total Split: {Number(totalSplit).toFixed(2)}
-        <br/>
-      </label>
-      <input type="button" value="-" onClick={onDelete} />
-      <br />
-    </>
-  );
-}
+import "./index.css";
+import { LineItem } from './LineItem';
+import { toDollarAmount } from './utils';
 
 function makeItem() {
   return Object.freeze({ cost: 0, owners: "", id: _.uniqueId() });
@@ -85,12 +35,6 @@ export default function App() {
     );
   });
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    alert(`Submitting Total ${total}`);
-    resetTotal();
-  };
-
   const onAddItem = () => {
     setLineItems([...lineItems, makeItem()]);
   };
@@ -110,7 +54,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
+      <form>
         <p>
           {lineItems.map((item, index) => (
             <LineItem
@@ -124,16 +68,15 @@ export default function App() {
           <input type="button" value="Add Item" onClick={onAddItem} />
         </p>
         <p>
-          Subtotal: {subtotal}
+          Subtotal: {toDollarAmount(subtotal)}
           <br />
-          Tax & Tip: {taxAndTip}
+          Tax & Tip: {toDollarAmount(taxAndTip)}
           <br />
           <label>
             Grand Total:
-            <input type="number" {...bindTotal} />
+            $<input type="number" {...bindTotal} />
           </label>
         </p>
-        <input type="submit" value="Submit" />
       </form>
     </div>
   );
