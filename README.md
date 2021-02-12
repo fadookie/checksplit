@@ -1,3 +1,9 @@
+# Checksplit
+This is a simple app for splitting checks. Just enter the line item amount of each item on the bill and the grand total.
+It will automatically caluclate the split for each item including tax and tip.
+
+Demo: https://mlkxe.csb.app/
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
